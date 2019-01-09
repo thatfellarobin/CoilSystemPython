@@ -30,7 +30,8 @@ class SubThread(QThread):
         self.joystick = joystick
         self._subthreadName = ''
         self.params = [0,0,0,0,0]
-        self.labelOnGui = {'twistField': ['Frequency (Hz)','Magniude (mT)','AzimuthalAngle (deg)','PolarAngle (deg)','SpanAngle (deg)'],
+        self.labelOnGui = {
+            'twistField': ['Frequency (Hz)','Magniude (mT)','AzimuthalAngle (deg)','PolarAngle (deg)','SpanAngle (deg)'],
                         'rotateXY': ['Frequency (Hz)','Magniude (mT)','N/A','N/A','N/A'],
                         'rotateYZ': ['Frequency (Hz)','Magniude (mT)','N/A','N/A','N/A'],
                         'rotateXZ': ['Frequency (Hz)','Magniude (mT)','N/A','N/A','N/A'],
