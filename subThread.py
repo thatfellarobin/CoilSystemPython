@@ -3,16 +3,19 @@
 subThread.py
 ----------------------------------------------------------------------------
 Tips
-If you are using Atom, use Ctrl+Alt+[ to fold all the funcitons.
+If you are using Atom, use Ctrl+Shift+Alt+[ to fold all the funcitons.
 Make your life easier.
 ----------------------------------------------------------------------------
 [GitHub] : https://github.com/atelier-ritz
 =============================================================================
 """
 import time
+import numpy as np
+import surgGripper
 from mathfx import *
 from math import pi, sin, cos, sqrt, atan2, degrees
 from PyQt5.QtCore import pyqtSignal, QMutexLocker, QMutex, QThread
+
 
 def subthreadNotDefined():
     print('Subthread not defined.')
@@ -46,6 +49,7 @@ class SubThread(QThread):
                         'swimmerPathFollowing': ['Frequency (Hz)','Magniude (mT)','temp angle','N/A','N/A'],
                         'swimmerBenchmark': ['bias angle (deg)','N/A','N/A','N/A','N/A'],
                         'tianqiGripper': ['N/A','Magnitude (mT)','Frequency (Hz)','Direction (deg)','N/A'],
+                        'gripper_joystick_ctrl': ['N/A','N/A','N/A','N/A','N/A'],
                         'default':['param0','param1','param2','param3','param4']}
         self.defaultValOnGui = {
                         'twistField': [0,0,0,0,0],
@@ -650,5 +654,18 @@ class SubThread(QThread):
             self.field.setX(fieldX)
             self.field.setY(0)
             self.field.setZ(fieldZ)
+            if self.stopped:
+                return
+
+    def gripper_joystick_ctrl(self):
+        while True:
+            altitude = np.deg2rad(30) * self.joystick.axis_data[4]
+            if altitude < 0:
+                altitude = 0
+            azimuth = -np.deg2rad(30) * self.joystick.axis_data[0]
+            fieldParall = 7 * (1 + self.joystick.axis_data[5])
+            BTotal = surgGripper.calc_field(azimuth, altitude, fieldParall)
+            self.field.setXYZ(BTotal[0], BTotal[1], BTotal[2])
+            # print(azimuth)
             if self.stopped:
                 return

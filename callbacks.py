@@ -16,8 +16,8 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 # Creating instances of fieldManager and Camera
 #=========================================================
 field = FieldManager(S826())
-vision = Vision(index=1,type='firewire',guid=2672909588927744,buffersize=12) # greyscale mode
-# vision2 = Vision(index=2,type='firewire',guid=2672909587849792,buffersize=12)
+vision = Vision(index=1,type='firewire',guid=0x00097eff42909500,buffersize=12) # greyscale mode
+# vision2 = Vision(index=2,type='firewire',guid=0x00097eff42802453,buffersize=12)
 # to use usb camera, try vision = Vision(index=1,type='usb')
 # to use 1 camera only, comment out this line:    vision2 = ...
 #=========================================================
