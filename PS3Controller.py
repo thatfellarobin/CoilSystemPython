@@ -1,11 +1,6 @@
 import pygame, time, math
 from mathfx import sind, cosd
 
-pygame.init()
-pygame.joystick.init()
-joystick = pygame.joystick.Joystick(0)
-joystick.init()
-
 '''
 PS3 Controllers can be turned on by presing PS button.
 If you see one solid indicator light, it is on.
@@ -38,6 +33,11 @@ class DualShock(object):
     }
 
     def __init__(self):
+        # pygame.init()
+        pygame.display.init()
+        pygame.joystick.init()
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
         self._name = joystick.get_name()
         self._numAxes = joystick.get_numaxes()
         self._numButtons = joystick.get_numbuttons()
@@ -51,7 +51,8 @@ class DualShock(object):
 
     def quit(self):
         pygame.joystick.quit()
-        pygame.quit()
+        pygame.display.quit()
+        # pygame.quit()
 
     def update(self):
         for event in pygame.event.get():

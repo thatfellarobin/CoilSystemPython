@@ -49,7 +49,7 @@
         <x>10</x>
         <y>40</y>
         <width>321</width>
-        <height>101</height>
+        <height>104</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -63,10 +63,10 @@
        <item row="0" column="1">
         <widget class="QSlider" name="hsld_x">
          <property name="minimum">
-          <number>-1400</number>
+          <number>-2000</number>
          </property>
          <property name="maximum">
-          <number>1400</number>
+          <number>2000</number>
          </property>
          <property name="singleStep">
           <number>10</number>
@@ -82,10 +82,10 @@
        <item row="0" column="2">
         <widget class="QDoubleSpinBox" name="dsb_x">
          <property name="minimum">
-          <double>-14.000000000000000</double>
+          <double>-20.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>14.000000000000000</double>
+          <double>20.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -99,10 +99,10 @@
        <item row="1" column="1">
         <widget class="QSlider" name="hsld_y">
          <property name="minimum">
-          <number>-1400</number>
+          <number>-2000</number>
          </property>
          <property name="maximum">
-          <number>1400</number>
+          <number>2000</number>
          </property>
          <property name="singleStep">
           <number>10</number>
@@ -118,10 +118,10 @@
        <item row="1" column="2">
         <widget class="QDoubleSpinBox" name="dsb_y">
          <property name="minimum">
-          <double>-14.000000000000000</double>
+          <double>-20.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>14.000000000000000</double>
+          <double>20.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -135,10 +135,10 @@
        <item row="2" column="1">
         <widget class="QSlider" name="hsld_z">
          <property name="minimum">
-          <number>-1400</number>
+          <number>-2000</number>
          </property>
          <property name="maximum">
-          <number>1400</number>
+          <number>2000</number>
          </property>
          <property name="singleStep">
           <number>10</number>
@@ -154,10 +154,10 @@
        <item row="2" column="2">
         <widget class="QDoubleSpinBox" name="dsb_z">
          <property name="minimum">
-          <double>-14.000000000000000</double>
+          <double>-20.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>14.000000000000000</double>
+          <double>20.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -174,7 +174,7 @@
         <x>10</x>
         <y>20</y>
         <width>321</width>
-        <height>101</height>
+        <height>104</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -457,6 +457,11 @@ p, li { white-space: pre-wrap; }
      </item>
      <item>
       <property name="text">
+       <string>gripper_joystick_ctrl</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
        <string>swimmerPathFollowing</string>
       </property>
      </item>
@@ -537,7 +542,7 @@ p, li { white-space: pre-wrap; }
        <x>20</x>
        <y>50</y>
        <width>311</width>
-       <height>171</height>
+       <height>186</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -668,7 +673,7 @@ p, li { white-space: pre-wrap; }
       <rect>
        <x>10</x>
        <y>250</y>
-       <width>321</width>
+       <width>375</width>
        <height>161</height>
       </rect>
      </property>
@@ -728,7 +733,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>720</width>
-     <height>22</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>
