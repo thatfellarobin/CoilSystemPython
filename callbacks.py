@@ -182,9 +182,9 @@ class GUI(QMainWindow,Ui_MainWindow):
         self.btn_zoom.clicked.connect(self.realTimePlot.zoom) # connect qt signal to zoom funcion
 
     def updatePlot(self):
-        self.realTimePlot.addDataX(field.x)
-        self.realTimePlot.addDataY(field.y)
-        self.realTimePlot.addDataZ(field.z)
+        self.realTimePlot.addDataX(field.bxSetpoint)
+        self.realTimePlot.addDataY(field.bySetpoint)
+        self.realTimePlot.addDataZ(field.bzSetpoint)
 
     #=====================================================
     # Callback Functions
