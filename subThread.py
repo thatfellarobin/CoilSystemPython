@@ -631,7 +631,10 @@ class SubThread(QThread):
                         self.field.bzSetpoint, self.vision.agent1.x,
                         self.vision.agent1.y
                         )
+<<<<<<< HEAD
                     )
+=======
+>>>>>>> 596b592a9d0ac320af76776208a9464026e4a8d4
             if self.stopped:
                 text_file = open("Output.txt", "w")
                 text_file.write(record)
