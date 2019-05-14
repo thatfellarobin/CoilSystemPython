@@ -1,6 +1,6 @@
 ﻿from PyQt5 import uic
-from PyQt5.QtCore import QFile, QRegExp, QTimer, Qt, pyqtSlot
-from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow, QMenu, QMessageBox
+from PyQt5.QtCore import QTimer, Qt, pyqtSlot
+from PyQt5.QtWidgets import QMainWindow
 from fieldManager import FieldManager
 from vision import Vision
 from s826 import S826
@@ -16,7 +16,7 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 # Creating instances of fieldManager and Camera
 #=========================================================
 field = FieldManager(S826())
-vision = Vision(index=1,type='firewire',guid=0x00097eff42909500,buffersize=12) # greyscale mode
+vision = Vision(index=1,type='firewire',guid=0x00097eff42909500,buffersize=12)
 # vision2 = Vision(index=2,type='firewire',guid=0x00097eff42802453,buffersize=12)
 # to use usb camera, try vision = Vision(index=1,type='usb')
 # to use 1 camera only, comment out this line:    vision2 = ...
@@ -42,12 +42,14 @@ class GUI(QMainWindow,Ui_MainWindow):
             self.setupSubThread(field,vision)
         else:
             self.setupSubThread(field,vision,joystick)
-        self.setupRealTimePlot() # comment ou this line if you don't want a preview window
+        # comment ou this line if you don't want a preview window
+        self.setupRealTimePlot()
         self.connectSignals()
         self.linkWidgets()
 
     #=====================================================
-    # [override] terminate the subThread and clear currents when closing the window
+    # [override] terminate the subThread and clear currents when closing the
+    # window
     #=====================================================
     def closeEvent(self,event):
         self.thrd.stop()
@@ -113,13 +115,17 @@ class GUI(QMainWindow,Ui_MainWindow):
         # Vision Tab
         self.highlighter = syntax.Highlighter(self.editor_vision.document())
         self.chb_bypassFilters.toggled.connect(self.on_chb_bypassFilters)
-        self.btn_refreshFilterRouting.clicked.connect(self.on_btn_refreshFilterRouting)
+        self.btn_refreshFilterRouting.clicked.connect(
+            self.on_btn_refreshFilterRouting
+            )
         self.btn_snapshot.clicked.connect(self.on_btn_snapshot)
         # object detection
         self.chb_objectDetection.toggled.connect(self.on_chb_objectDetection)
         # Subthread Tab
         self.cbb_subThread.currentTextChanged.connect(self.on_cbb_subThread)
-        self.chb_startStopSubthread.toggled.connect(self.on_chb_startStopSubthread)
+        self.chb_startStopSubthread.toggled.connect(
+            self.on_chb_startStopSubthread
+            )
         self.dsb_subThreadParam0.valueChanged.connect(self.thrd.setParam0)
         self.dsb_subThreadParam1.valueChanged.connect(self.thrd.setParam1)
         self.dsb_subThreadParam2.valueChanged.connect(self.thrd.setParam2)
@@ -132,19 +138,43 @@ class GUI(QMainWindow,Ui_MainWindow):
     #=====================================================
     def linkWidgets(self):
         # link slider to doubleSpinBox
-        self.dsb_x.valueChanged.connect(lambda value: self.hsld_x.setValue(int(value*100)))
-        self.dsb_y.valueChanged.connect(lambda value: self.hsld_y.setValue(int(value*100)))
-        self.dsb_z.valueChanged.connect(lambda value: self.hsld_z.setValue(int(value*100)))
-        self.hsld_x.valueChanged.connect(lambda value: self.dsb_x.setValue(float(value/100)))
-        self.hsld_y.valueChanged.connect(lambda value: self.dsb_y.setValue(float(value/100)))
-        self.hsld_z.valueChanged.connect(lambda value: self.dsb_z.setValue(float(value/100)))
+        self.dsb_x.valueChanged.connect(
+            lambda value: self.hsld_x.setValue(int(value*100))
+            )
+        self.dsb_y.valueChanged.connect(
+            lambda value: self.hsld_y.setValue(int(value*100))
+            )
+        self.dsb_z.valueChanged.connect(
+            lambda value: self.hsld_z.setValue(int(value*100))
+            )
+        self.hsld_x.valueChanged.connect(
+            lambda value: self.dsb_x.setValue(float(value/100))
+            )
+        self.hsld_y.valueChanged.connect(
+            lambda value: self.dsb_y.setValue(float(value/100))
+            )
+        self.hsld_z.valueChanged.connect(
+            lambda value: self.dsb_z.setValue(float(value/100))
+            )
 
-        self.dsb_xGradient.valueChanged.connect(lambda value: self.hsld_xGradient.setValue(int(value*100)))
-        self.dsb_yGradient.valueChanged.connect(lambda value: self.hsld_yGradient.setValue(int(value*100)))
-        self.dsb_zGradient.valueChanged.connect(lambda value: self.hsld_zGradient.setValue(int(value*100)))
-        self.hsld_xGradient.valueChanged.connect(lambda value: self.dsb_xGradient.setValue(float(value/100)))
-        self.hsld_yGradient.valueChanged.connect(lambda value: self.dsb_yGradient.setValue(float(value/100)))
-        self.hsld_zGradient.valueChanged.connect(lambda value: self.dsb_zGradient.setValue(float(value/100)))
+        self.dsb_xGradient.valueChanged.connect(
+            lambda value: self.hsld_xGradient.setValue(int(value*100))
+            )
+        self.dsb_yGradient.valueChanged.connect(
+            lambda value: self.hsld_yGradient.setValue(int(value*100))
+            )
+        self.dsb_zGradient.valueChanged.connect(
+            lambda value: self.hsld_zGradient.setValue(int(value*100))
+            )
+        self.hsld_xGradient.valueChanged.connect(
+            lambda value: self.dsb_xGradient.setValue(float(value/100))
+            )
+        self.hsld_yGradient.valueChanged.connect(
+            lambda value: self.dsb_yGradient.setValue(float(value/100))
+            )
+        self.hsld_zGradient.valueChanged.connect(
+            lambda value: self.dsb_zGradient.setValue(float(value/100))
+            )
     #=====================================================
     # Thread Example
     #=====================================================
@@ -173,13 +203,17 @@ class GUI(QMainWindow,Ui_MainWindow):
 
     #=====================================================
     # Real time plot
-    # This is showing actual coil current that is stored in field.x, field.y, field.z
-    # Note: the figure is updating at the speed of self.updateRate defined in _init_
+    # This is showing requested flux density that is stored in
+    # field.bxSetpoint, field.bySetpoint, field.bzSetpoint
+    # Note: the figure is updating at the speed of self.updateRate defined in
+    # __init__.
     #=====================================================
     def setupRealTimePlot(self):
         self.realTimePlot = CustomFigCanvas()
-        self.LAYOUT_A.addWidget(self.realTimePlot, *(0,0)) # put the preview window in the layout
-        self.btn_zoom.clicked.connect(self.realTimePlot.zoom) # connect qt signal to zoom funcion
+         # put the preview window in the layout
+        self.LAYOUT_A.addWidget(self.realTimePlot, *(0,0))
+         # connect qt signal to zoom funcion
+        self.btn_zoom.clicked.connect(self.realTimePlot.zoom)
 
     def updatePlot(self):
         self.realTimePlot.addDataX(field.bxSetpoint)
@@ -214,7 +248,9 @@ class GUI(QMainWindow,Ui_MainWindow):
         vision.setStateFiltersBypassed(state)
 
     def on_btn_refreshFilterRouting(self):
-        vision.createFilterRouting(self.editor_vision.toPlainText().splitlines())
+        vision.createFilterRouting(
+            self.editor_vision.toPlainText().splitlines()
+            )
 
     def on_btn_snapshot(self):
         vision.setStateSnapshotEnabled(True)
@@ -226,11 +262,20 @@ class GUI(QMainWindow,Ui_MainWindow):
 
     # subthread
     def on_cbb_subThread(self,subThreadName):
-        # an array that stores the name for params. Return param0, param1, ... if not defined.
-        labelNames = self.thrd.labelOnGui.get(subThreadName,self.thrd.labelOnGui['default'])
-        minVals = self.thrd.minOnGui.get(subThreadName,self.thrd.minOnGui['default'])
-        maxVals = self.thrd.maxOnGui.get(subThreadName,self.thrd.maxOnGui['default'])
-        defaultVals = self.thrd.defaultValOnGui.get(subThreadName,self.thrd.defaultValOnGui['default'])
+        # an array that stores the name for params. Return param0, param1, ...
+        # if not defined.
+        labelNames = self.thrd.labelOnGui.get(
+            subThreadName,self.thrd.labelOnGui['default']
+            )
+        minVals = self.thrd.minOnGui.get(
+            subThreadName,self.thrd.minOnGui['default']
+            )
+        maxVals = self.thrd.maxOnGui.get(
+            subThreadName,self.thrd.maxOnGui['default']
+            )
+        defaultVals = self.thrd.defaultValOnGui.get(
+            subThreadName,self.thrd.defaultValOnGui['default']
+            )
         for i in range(5):
             targetLabel = 'lbl_subThreadParam' + str(i)
             targetSpinbox = 'dsb_subThreadParam' + str(i)

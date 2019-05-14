@@ -6,6 +6,7 @@ from matplotlib.animation import TimedAnimation
 from matplotlib.lines import Line2D
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+
 class CustomFigCanvas(FigureCanvas, TimedAnimation):
     """A class used for plotting field value in real time.
 
@@ -15,25 +16,27 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
         self.addedDataX = []
         self.addedDataY = []
         self.addedDataZ = []
-        self.ylimRange = [-14,14]
+        self.ylimRange = [-20,20]
         self.isZoomed = False
         # print(matplotlib.__version__)
 
         # data
         self.numberOfSamplesStored = 200
+        # Initialize a time array from 0 to 199
         self.t = np.linspace(
             0, self.numberOfSamplesStored - 1, self.numberOfSamplesStored
             )
+        # Initialize the x, y and z field data as zeros
         self.x = (self.t * 0.0)
         self.y = (self.t * 0.0)
         self.z = (self.t * 0.0)
-        # The window
+        # Create the figure window
         self.fig = Figure(figsize=(5,5), dpi=100)
         self.fig.patch.set_facecolor((0.92, 0.92, 0.92))
-        self.ax1 = self.fig.add_subplot(111)
-        # self.ax1 settings
+        # Create the axes
+        self.ax1 = self.fig.add_subplot(1,1,1)
         self.ax1.set_ylabel('field XYZ')
-        # line1 X
+        # Line representing the Bx field
         self.line1 = Line2D([], [], color='blue')
         self.line1_tail = Line2D([], [], color='blue', linewidth=2)
         self.line1_head = Line2D(
@@ -42,7 +45,7 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
         self.ax1.add_line(self.line1)
         self.ax1.add_line(self.line1_tail)
         self.ax1.add_line(self.line1_head)
-        # line1 Y
+        # Line representing the By field
         self.line2 = Line2D([], [], color='green')
         self.line2_tail = Line2D([], [], color='green', linewidth=2)
         self.line2_head = Line2D(
@@ -51,7 +54,7 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
         self.ax1.add_line(self.line2)
         self.ax1.add_line(self.line2_tail)
         self.ax1.add_line(self.line2_head)
-        # line1 Z
+        # Line representing the Bz field
         self.line3 = Line2D([], [], color='red')
         self.line3_tail = Line2D([], [], color='red', linewidth=2)
         self.line3_head = Line2D(
@@ -60,7 +63,7 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
         self.ax1.add_line(self.line3)
         self.ax1.add_line(self.line3_tail)
         self.ax1.add_line(self.line3_head)
-        #lim
+        # Set the axis limits
         self.ax1.set_xlim(0, self.numberOfSamplesStored - 1)
         self.ax1.set_ylim(self.ylimRange[0], self.ylimRange[1])
         self.ax1.get_xaxis().set_visible(False)
@@ -69,7 +72,7 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
         TimedAnimation.__init__(self, self.fig, interval = 50, blit = True)
 
     # ========================================================
-    # connected to signel callback signal
+    # connected to signal callback signal
     # ========================================================
     def addDataX(self, value): self.addedDataX.append(value)
     def addDataY(self, value): self.addedDataY.append(value)
@@ -108,32 +111,32 @@ class CustomFigCanvas(FigureCanvas, TimedAnimation):
             del(self.addedDataY[0])
             del(self.addedDataZ[0])
         self.line1.set_data(
-            self.t[ 0 : self.t.size - margin ],
-            self.x[ 0 : self.t.size - margin ]
+            self.t[0 : self.t.size-margin],
+            self.x[0 : self.t.size-margin]
             )
         self.line1_tail.set_data(
-            np.append(self.t[-10:-1 - margin], self.t[-1 - margin]),
-            np.append(self.x[-10:-1 - margin], self.x[-1 - margin])
+            np.append(self.t[-10 : -1-margin], self.t[-1 - margin]),
+            np.append(self.x[-10 : -1-margin], self.x[-1 - margin])
             )
         self.line1_head.set_data(self.t[-1 - margin], self.x[-1 - margin])
 
         self.line2.set_data(
-            self.t[ 0 : self.t.size - margin ],
-            self.y[ 0 : self.t.size - margin ]
+            self.t[0 : self.t.size-margin],
+            self.y[0 : self.t.size-margin]
             )
         self.line2_tail.set_data(
-            np.append(self.t[-10:-1 - margin], self.t[-1 - margin]),
-            np.append(self.y[-10:-1 - margin], self.y[-1 - margin])
+            np.append(self.t[-10 : -1-margin], self.t[-1 - margin]),
+            np.append(self.y[-10 : -1-margin], self.y[-1 - margin])
             )
         self.line2_head.set_data(self.t[-1 - margin], self.y[-1 - margin])
 
         self.line3.set_data(
-            self.t[ 0 : self.t.size - margin ],
-            self.z[ 0 : self.t.size - margin ]
+            self.t[0 : self.t.size-margin],
+            self.z[0 : self.t.size-margin]
             )
         self.line3_tail.set_data(
-            np.append(self.t[-10:-1 - margin], self.t[-1 - margin]),
-            np.append(self.z[-10:-1 - margin], self.z[-1 - margin])
+            np.append(self.t[-10 : -1-margin], self.t[-1 - margin]),
+            np.append(self.z[-10 : -1-margin], self.z[-1 - margin])
             )
         self.line3_head.set_data(self.t[-1 - margin], self.z[-1 - margin])
 
