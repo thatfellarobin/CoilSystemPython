@@ -10,15 +10,17 @@ class Highlighter(QSyntaxHighlighter):
         keywordFormat.setForeground(Qt.darkBlue)
         keywordFormat.setFontWeight(QFont.Bold)
 
-        keywordPatterns = ["\\bchar\\b", "\\bclass\\b", "\\bconst\\b",
-                "\\bdouble\\b", "\\benum\\b", "\\bexplicit\\b", "\\bfriend\\b",
-                "\\binline\\b", "\\bint\\b", "\\blong\\b", "\\bnamespace\\b",
-                "\\boperator\\b", "\\bprivate\\b", "\\bprotected\\b",
-                "\\bpublic\\b", "\\bshort\\b", "\\bsignals\\b", "\\bsigned\\b",
-                "\\bslots\\b", "\\bstatic\\b", "\\bstruct\\b",
-                "\\btemplate\\b", "\\btypedef\\b", "\\btypename\\b",
-                "\\bunion\\b", "\\bunsigned\\b", "\\bvirtual\\b", "\\bvoid\\b",
-                "\\bvolatile\\b"]
+        keywordPatterns = [
+            "\\bchar\\b", "\\bclass\\b", "\\bconst\\b",
+            "\\bdouble\\b", "\\benum\\b", "\\bexplicit\\b", "\\bfriend\\b",
+            "\\binline\\b", "\\bint\\b", "\\blong\\b", "\\bnamespace\\b",
+            "\\boperator\\b", "\\bprivate\\b", "\\bprotected\\b",
+            "\\bpublic\\b", "\\bshort\\b", "\\bsignals\\b", "\\bsigned\\b",
+            "\\bslots\\b", "\\bstatic\\b", "\\bstruct\\b",
+            "\\btemplate\\b", "\\btypedef\\b", "\\btypename\\b",
+            "\\bunion\\b", "\\bunsigned\\b", "\\bvirtual\\b", "\\bvoid\\b",
+            "\\bvolatile\\b"
+            ]
 
         self.highlightingRules = [(QRegExp(pattern), keywordFormat)
                 for pattern in keywordPatterns]
@@ -72,7 +74,8 @@ class Highlighter(QSyntaxHighlighter):
                 self.setCurrentBlockState(1)
                 commentLength = len(text) - startIndex
             else:
-                commentLength = endIndex - startIndex + self.commentEndExpression.matchedLength()
+                commentLength = (endIndex - startIndex
+                    + self.commentEndExpression.matchedLength())
 
             self.setFormat(startIndex, commentLength,
                     self.multiLineCommentFormat)

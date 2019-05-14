@@ -18,9 +18,9 @@ import drawing
 import objectDetection
 from objectDetection import Agent
 
-#=============================================================================================
+#==============================================================================
 # Mouse callback Functions
-#=============================================================================================
+#==============================================================================
 def showClickedCoordinate(event,x,y,flags,param):
     # global mouseX,mouseY
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -37,15 +37,19 @@ class Vision(object):
         self._isObjectDetectionEnabled = False
         self._isSnapshotEnabled = False
         self._detectionAlgorithm = ''
-        self.filterRouting = [] # data structure: {"filterName", "args"}, defined in the GUI text editor
+         # data structure: {"filterName", "args"}, defined in the GUI
+         # text editor
+        self.filterRouting = []
 
-        # instances of Agent class. You can define an array if you have multiple agents.
+        # instances of Agent class. You can define an array if you have
+        # multiple agents.
         # Pass them to *processObjectDetection()*
         self.agent1 = Agent()
         self.agent2 = Agent()
 
         # drawings
-        self.drawingRouting = [] # data structure: {"drawingName", "args"}, defined in Subthread
+        # data structure: {"drawingName", "args"}, defined in Subthread
+        self.drawingRouting = []
 
         # video writing
         self._isVideoWritingEnabled = False
@@ -82,7 +86,9 @@ class Vision(object):
                 else:
                     frameFiltered = frameOriginal
                 if self.isObjectDetectionEnabled():
-                    frameProcessed = self.processObjectDetection(frameFiltered,frameOriginal)
+                    frameProcessed = self.processObjectDetection(
+                        frameFiltered, frameOriginal
+                        )
                 else:
                     frameProcessed = frameFiltered
                 if self.isDrawingEnabled():
@@ -102,7 +108,9 @@ class Vision(object):
                 else:
                     frameFiltered = frameOriginal
                 if self.isObjectDetectionEnabled():
-                    frameProcessed = self.processObjectDetection(frameFiltered,frameOriginal)
+                    frameProcessed = self.processObjectDetection(
+                        frameFiltered, frameOriginal
+                        )
                 else:
                     frameProcessed = frameFiltered
                 if self.isDrawingEnabled():
@@ -124,9 +132,9 @@ class Vision(object):
             self.cap.release
         cv2.destroyWindow(self.windowName())
 
-    #==============================================================================================
+    #==========================================================================
     # obtain instance attributes
-    #==============================================================================================
+    #==========================================================================
     def windowName(self):
         return 'CamID:{} (Click to print coordinate)'.format(self._id)
 
@@ -151,9 +159,9 @@ class Vision(object):
     def isVideoWritingEnabled(self):
         return self._isVideoWritingEnabled
 
-    #==============================================================================================
+    #==========================================================================
     # set instance attributes
-    #==============================================================================================
+    #==========================================================================
     def setStateUpdate(self,state):
         self._isUpdating = state
 
@@ -170,11 +178,14 @@ class Vision(object):
     def setStateSnapshotEnabled(self,state):
         self._isSnapshotEnabled = state
 
-    #==============================================================================================
+    #==========================================================================
     # Video recording
-    #==============================================================================================
+    #==========================================================================
     def createVideoWriter(self,fileName):
-        self.videoWriter = cv2.VideoWriter(fileName,fourcc=cv2.VideoWriter_fourcc(*'XVID'),fps=30.0,frameSize=(640,480),isColor=True)
+        self.videoWriter = cv2.VideoWriter(
+            fileName, fourcc=cv2.VideoWriter_fourcc(*'XVID'), fps=30.0,
+            frameSize=(640,480), isColor=True
+            )
 
     def startRecording(self,fileName):
         self.createVideoWriter(fileName)
@@ -186,10 +197,10 @@ class Vision(object):
         self.videoWriter.release()
         print('Stop recording.')
 
-    #==============================================================================================
+    #==========================================================================
     # <Filters>
     # Define the filters in filterlib.py
-    #==============================================================================================
+    #==========================================================================
     def createFilterRouting(self,text):
         self.filterRouting = []
         for line in text:
@@ -204,33 +215,41 @@ class Vision(object):
 
     def processFilters(self,image):
         for item in self.filterRouting:
-            image = getattr(filterlib,item['filterName'],filterlib.filterNotDefined)(image,item['args'])
+            image = getattr(
+                filterlib,item['filterName'],filterlib.filterNotDefined
+                )(image,item['args'])
         # You can add custom filters here if you don't want to use the editor
         return image
 
-    #==============================================================================================
+    #==========================================================================
     # <object detection>
     # Object detection algorithm is executed after all the filters
     # It is assumed that "imageFiltered" is used for detection purpose only;
     # the boundary of the detected object will be drawn on "imageOriginal".
-    # information of detected objects can be stored in an instance of "Agent" class.
-    #==============================================================================================
+    # information of detected objects can be stored in an instance of "Agent"
+    # class.
+    #==========================================================================
     def processObjectDetection(self,imageFiltered,imageOriginal):
         # convert to rgb so that coloured lines can be drawn on top
         imageOriginal = filterlib.color(imageOriginal)
 
         # object detection algorithm starts here
-        # In this function, information about the agent will be updated, and the original image with
-        # the detected objects highlighted will be returned
-        algorithm = getattr(objectDetection,self._detectionAlgorithm,objectDetection.algorithmNotDefined)
-        imageProcessed = algorithm(imageFiltered,imageOriginal,self.agent1) # pass instances of Agent class if you want to update its info
+        # In this function, information about the agent will be updated, and
+        # the original image with the detected objects highlighted will be
+        # returned.
+        algorithm = getattr(
+            objectDetection, self._detectionAlgorithm,
+            objectDetection.algorithmNotDefined
+            )
+        # pass instances of Agent class if you want to update its info
+        imageProcessed = algorithm(imageFiltered,imageOriginal,self.agent1)
         return imageProcessed
 
-    #==============================================================================================
+    #==========================================================================
     # <subthread drawing>
     # Used to draw lines etc. on a plot
     # For showing the path that the robot wants to follow
-    #==============================================================================================
+    #==========================================================================
     def clearDrawingRouting(self):
         self.drawingRouting = []
 
@@ -241,5 +260,7 @@ class Vision(object):
         # convert to rgb so that coloured lines can be drawn on top
         image = filterlib.color(image)
         for item in self.drawingRouting:
-            image = getattr(drawing,item['drawingName'],drawing.drawingNotDefined)(image,item['args'])
+            image = getattr(
+                drawing,item['drawingName'],drawing.drawingNotDefined
+                )(image,item['args'])
         return image

@@ -2,11 +2,13 @@ import time
 import numpy as np
 from s826 import S826
 
-def send_field_command(fieldOutput):
-    """ Command a uniform magnetic flux density output from the coil system.
 
-        This function uses the conversion factors determined from the coil
-        system calibration. """
+def send_field_command(fieldOutput):
+    """Command a uniform magnetic flux density output from the coil system.
+
+    This function uses the conversion factors determined from the coil
+    system calibration.
+    """
     # Coil current analog output channel numbers and conversion factors in mT/V
     AO_X1 = [5, 2.801]
     AO_X2 = [1, 2.425]
@@ -22,14 +24,16 @@ def send_field_command(fieldOutput):
     boardObj.s826_aoPin(AO_Z1[0], fieldOutput[2] / 2 / AO_Z1[1])
     boardObj.s826_aoPin(AO_Z2[0], fieldOutput[2] / 2 / AO_Z2[1])
 
+
 def get_field_estimate():
-    """ Estimate the flux density output using the measured amplifier currents.
+    """Estimate the flux density output using the measured amplifier currents.
 
     This function requests the voltage measurements from the s826 analog
     inputs and converts them to estimated flux density. The conversion factors
-    were determined from the coil system calibration. """
-    # Conversion factors from measured voltage to output current for the 30A8 and
-    # 120A10 amplifier boards.
+    were determined from the coil system calibration.
+    """
+    # Conversion factors from measured voltage to output current for the 30A8
+    # and 120A10 amplifier boards.
     measureFactor30A8 = 3.8 #[A/V]
     measureFactor120A10 = 15.9 #[A/V]
     # Coil current analog input channel numbers and conversion factors in mT/V
@@ -43,17 +47,17 @@ def get_field_estimate():
     boardObj.s826_aiRead()
     fieldEstimate = [0, 0, 0]
     # Convert the analog input measured voltages into estimated field values
-    fieldEstimate[0] = (boardObj.ai[AI_X1[0]] * AI_X1[1] +
-        boardObj.ai[AI_X2[0]] * AI_X2[1]) #[mT]
-    fieldEstimate[1] = (boardObj.ai[AI_Y1[0]] * AI_Y1[1] +
-        boardObj.ai[AI_Y2[0]] * AI_Y2[1]) #[mT]
-    fieldEstimate[2] = (boardObj.ai[AI_Z1[0]] * AI_Z1[1] +
-        boardObj.ai[AI_Z2[0]] * AI_Z2[1]) #[mT]
+    fieldEstimate[0] = (boardObj.ai[AI_X1[0]] * AI_X1[1]
+        + boardObj.ai[AI_X2[0]] * AI_X2[1]) #[mT]
+    fieldEstimate[1] = (boardObj.ai[AI_Y1[0]] * AI_Y1[1]
+        + boardObj.ai[AI_Y2[0]] * AI_Y2[1]) #[mT]
+    fieldEstimate[2] = (boardObj.ai[AI_Z1[0]] * AI_Z1[1]
+        + boardObj.ai[AI_Z2[0]] * AI_Z2[1]) #[mT]
     return fieldEstimate
+
 
 # Instantiate object for commanding the Sensoray s826 Multifunction I/O board.
 boardObj = S826()
-
 # Buffers for moving average filters.
 bufLength = 50 #[samples]
 bufX = np.zeros(bufLength)

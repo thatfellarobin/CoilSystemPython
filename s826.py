@@ -28,7 +28,7 @@ class S826(object):
         self.s826_initAnalogInputs()
 
     def s826_init(self):
-        """ Open communication with the s826 board. """
+        """Open communication with the s826 board."""
         errCode = s826dll.S826_SystemOpen()
         if errCode < 0:
             print('Cannot initialize s826 board. ')
@@ -41,23 +41,25 @@ class S826(object):
         return errCode
 
     def s826_close(self):
-        """ Close communication with the s826 board.
+        """Close communication with the s826 board.
 
-            Note: this method does not clear the voltage outputs. Make sure the
-            voltage outputs are set to zero before closing communication. """
+        Note: this method does not clear the voltage outputs. Make sure
+        the voltage outputs are set to zero before closing communication.
+        """
         s826dll.S826_SystemClose()
 
     def s826_initRange(self):
-        """ Initialize the voltage ranges of all 8 analog outputs on the s826. """
+        """Initialize the voltage ranges of all s826 analog outputs."""
         # Configure 8 analog outputs
         for i in range(8):
             self.s826_setRange(i,2)
 
     def s826_initAnalogInputs(self):
-        """ Configure the s826 analog input slots.
+        """Configure the s826 analog input slots.
 
-            The present configuration is intended for reading from the 8 AMC
-            amplifiers."""
+        The present configuration is intended for reading from the 8 AMC
+        amplifiers.
+        """
         # ----- AMC 30A8 -----
         # Peak current: 30 A, Monitor conversion factor: 3.8 A/V
         # 30 A / 3.8 A/V = 7.89 V maximum
@@ -76,7 +78,12 @@ class S826(object):
                 )
             self.aiMaxV[slotNum] = AI_RANGE_PARAM[aiRangeCode]
             if errCode != 0:
-                print('Failed to configure slot for S826 AI Channel {}. '.format(SLOT_CHAN[slotNum]), end=' ')
+                print(
+                    'Failed to configure slot for S826 AI Channel {}. '.format(
+                        SLOT_CHAN[slotNum]
+                        ),
+                    end=' '
+                    )
                 self.s826_errorInterpreter(errCode)
                 return errCode
         # Skip sampling all but the first 8 timeslots
@@ -103,10 +110,11 @@ class S826(object):
     # rangeCode: 0: 0 +5V; 1: 0 +10V; 2: -5 +5V; 3:-10 +10V.
     # ======================================================================
     def s826_setRange(self,chan,rangeCode):
-        """ Set the range of one of the s826 analog output channels.
+        """Set the range of one of the s826 analog output channels.
 
-            It also stores the corresponding lower voltage and range as
-            object properties. """
+        It also stores the corresponding lower voltage and range as
+        object properties.
+        """
         self.lowerV[chan] = RANGE_PARAM[rangeCode][0]
         self.rangeV[chan] = RANGE_PARAM[rangeCode][1]
         s826dll.S826_DacRangeWrite(BOARD, chan, rangeCode, 0)
@@ -117,23 +125,25 @@ class S826(object):
     # outputV: Desired analog output voltage (can be positive and negative).
     # ======================================================================
     def s826_aoPin(self,chan,outputV):
-        """ Command a voltage output from the specified s826 analog output channel. """
+        """Command an analog output from the specified channel."""
         lowerV = self.lowerV[chan]
         rangeV = self.rangeV[chan]
         setpoint = int((outputV-lowerV)/rangeV*0xffff)
         s826dll.S826_DacDataWrite(BOARD,chan,setpoint,0)
 
     def s826_aiRead(self):
-        """ Read from configured s826 analog input slots.
+        """Read from configured s826 analog input slots.
 
-            The measured voltages are stored as object properties."""
+        The measured voltages are stored as object properties.
+        """
         # Creating buffer classes to store the AI data
         cIntBuffer = c_int * 16
         cUIntBuffer = c_uint * 16
         # Instantiating buffers
         buf = cIntBuffer()
         tstamp = cUIntBuffer()
-        # Slotlist for the first 8 slots (bitflags to indicate slots of interest)
+        # Slotlist for the first 8 slots (bitflags to indicate slots of
+        # interest).
         slotlist = c_uint(0x00ff)
         # Maximum time to wait for new values. Zero means return immediately.
         tmax = 0 # microseconds
@@ -150,11 +160,12 @@ class S826(object):
         # print(self.ai)
 
     def s826_errorInterpreter(self,errCode):
-        """ Interpret s826 error codes.
+        """Interpret s826 error codes.
 
-            This method interprets the error codes returned by most of the
-            s826 board functions and prints the corresponding error message
-            from the s826 manual. """
+        This method interprets the error codes returned by most of the
+        s826 board functions and prints the corresponding error message
+        from the s826 manual.
+        """
         # List of standard error messages from Sensoray
         errMsg = [
             's826: No errors (0).',

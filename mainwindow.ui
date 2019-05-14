@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>720</width>
+    <width>750</width>
     <height>476</height>
    </rect>
   </property>
@@ -371,7 +371,7 @@ p, li { white-space: pre-wrap; }
       </rect>
      </property>
      <property name="text">
-      <string>Object Detection</string>
+      <string>Detect Object</string>
      </property>
      <property name="checked">
       <bool>false</bool>
@@ -732,7 +732,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>720</width>
+     <width>750</width>
      <height>28</height>
     </rect>
    </property>

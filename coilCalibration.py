@@ -2,10 +2,13 @@ import time
 import numpy as np
 from s826 import S826
 
+
 def send_voltage_command(voltOutput):
-    """ This function sends voltage commands to the 6 amplifiers of the coil
-        system given a list of 6 voltages. The order of the coils is X1, X2,
-        Y1, Y2, Z1, Z2. """
+    """Send voltage commands to the coil system.
+
+    Given a list of 6 voltages. The order of the coils is X1, X2, Y1, Y2, Z1,
+    Z2.
+    """
     # Coil current analog output channel numbers
     AO_X1 = 5
     AO_X2 = 1
@@ -23,12 +26,16 @@ def send_voltage_command(voltOutput):
     boardObj.s826_aoPin(AO_Z1, voltOutput[4])
     boardObj.s826_aoPin(AO_Z2, voltOutput[5])
 
+
 def get_coil_currents():
-    """ This function requests the measured voltages from the current monitor
-    pins of the coil amplifiers and converts them to measured current values.
-    The order of the coils is X1, X2, Y1, Y2, Z1, Z2. """
-    # Conversion factors from measured voltage to output current for the 30A8 and
-    # 120A10 amplifier boards.
+    """Calculate the coil currents from the measured analog input voltages.
+
+    Requests the measured voltages from the analog input slots and converts
+    them to measured current values. The order of the coils is X1, X2, Y1, Y2,
+    Z1, Z2.
+    """
+    # Conversion factors from measured voltage to output current for the 30A8
+    # and 120A10 amplifier boards.
     measureFactor30A8 = 3.8 #[A/V]
     measureFactor120A10 = 15.9 #[A/V]
     # Coil current analog input channel numbers and conversion factors
@@ -50,9 +57,9 @@ def get_coil_currents():
     currents[5] = boardObj.ai[AI_Z2[0]] * AI_Z2[1] #[A]
     return currents
 
+
 # Instantiate object for commanding the Sensoray s826 Multifunction I/O board.
 boardObj = S826()
-
 # Buffers for moving average filters.
 bufLength = 50 #[samples]
 bufX1 = np.zeros(bufLength)
@@ -107,7 +114,6 @@ while t < tMax:
     t = time.time() - tStart
     # Increment buffer and loop back to 0 if it exceeds bufLength
     index = (index+1) % bufLength
-
 # Set all outputs to zero (clear coil currents)
 voltOutput = [0, 0, 0, 0, 0, 0] #[V]
 send_voltage_command(voltOutput)
