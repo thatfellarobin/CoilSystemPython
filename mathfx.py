@@ -1,9 +1,13 @@
 from math import pi, sin, cos, radians, sqrt
+
+
 def cosd(val):
     return cos(radians(val))
 
+
 def sind(val):
     return sin(radians(val))
+
 
 def oscBetween(currentTime,oscShape,frequency,bound1,bound2,phaseOffset=0):
     """
@@ -11,9 +15,11 @@ def oscBetween(currentTime,oscShape,frequency,bound1,bound2,phaseOffset=0):
          /  \  /  \  /  \
         /    \/    \/    \   < _ _ _ lowerbound
 
-    This is a function that returns a value that oscillates periodically between a lower and an upper bound.
+    This is a function that returns a value that oscillates periodically
+    between a lower and an upper bound.
     It always returns "lowerBound" when currentTime = 0
-    @param currentTime: elapsed time (s), the x-axis variable of the periodical function
+    @param currentTime: elapsed time (s), the x-axis variable of the
+        periodic function
     @param oscShape: defines the waveform of the oscillation
     @param phaseOffset: defines the offset of the phase (range: 0 to 1)
         0 or 1: no phase offset
@@ -39,20 +45,24 @@ def oscBetween(currentTime,oscShape,frequency,bound1,bound2,phaseOffset=0):
     else:
         return 0
 
+
 def normalizeTime(currentTime,frequency):
-    '''
-    This function converts the x-axis variable (time) of a periodic function to the normalized time, range: 0 - 1
-    '''
+    """
+    This function converts the x-axis variable (time) of a periodic function
+    to the normalized time, range: 0 - 1
+    """
     if frequency == 0: return 0
     else:
         period = 1/frequency
         return currentTime % period / period
 
+
 def perpendicularFootToLine(x,y,x1,y1,x2,y2):
     """
     A line *l* is defined by P1(x1,y1) and P2(x2,y2). (Ax + By + C = 0)
     A point *P* is defined by (x,y).
-    This function returns the perpendicular foot of the point *P* to the line *l*.
+    This function returns the perpendicular foot of the point *P* to the line
+    *l*.
     """
     A = y2 - y1
     B = x1 - x2
@@ -61,13 +71,13 @@ def perpendicularFootToLine(x,y,x1,y1,x2,y2):
     footY = (A**2*y - A*B*x - B*C) / (A**2 + B**2)
     return footX, footY
 
+
 def distanceBetweenPoints(x1,y1,x2,y2):
     return sqrt((x1 - x2)**2 + (y1 - y2)**2)
 
+
 def normalizeAngle(radians):
-    """
-    Normalize angles to (-pi,pi]
-    """
+    """Normalize angles to (-pi,pi]"""
     angle = radians % (2*pi) # [0,2*pi)
     if angle > pi: angle = angle - 2*pi
     return angle

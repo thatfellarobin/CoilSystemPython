@@ -1,11 +1,11 @@
 import pygame, time, math
 from mathfx import sind, cosd
 
-'''
+"""
 PS3 Controllers can be turned on by presing PS button.
 If you see one solid indicator light, it is on.
 If you see four lights blinking it is off.
-'''
+"""
 
 class DualShock(object):
     KEY = {
@@ -116,7 +116,7 @@ class DualShock(object):
         print("===========================================")
 
 if __name__ == "__main__":
-    ''' Run this script directly for testing '''
+    """Run this script directly for testing."""
     import time
     j = DualShock()
     while True:

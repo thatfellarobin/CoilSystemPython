@@ -1,4 +1,5 @@
 
+
 class FieldManager(object):
     def __init__(self,dac):
         # Coil analog output channel numbers.
@@ -47,43 +48,47 @@ class FieldManager(object):
         self.dac = dac
 
     def setX(self,mT):
-        """ Generate a zero-gradient magnetic flux density in the x-direction.
+        """Generate a zero-gradient magnetic flux density in the x-direction.
 
         The requested field is split evenly between the two x-direction
-        Helmholtz coils."""
+        Helmholtz coils.
+        """
         self.dac.s826_aoPin(self.aoPinX1, mT / 2 / self.aoFactorX1)
         self.dac.s826_aoPin(self.aoPinX2, mT / 2 / self.aoFactorX2)
         self.bxSetpoint = mT
 
     def setY(self,mT):
-        """ Generate a zero-gradient magnetic flux density in the y-direction.
+        """Generate a zero-gradient magnetic flux density in the y-direction.
 
         The requested field is split evenly between the two y-direction
-        Helmholtz coils."""
+        Helmholtz coils.
+        """
         self.dac.s826_aoPin(self.aoPinY1, mT / 2 / self.aoFactorY1)
         self.dac.s826_aoPin(self.aoPinY2, mT / 2 / self.aoFactorY2)
         self.bySetpoint = mT
 
     def setZ(self,mT):
-        """ Generate a zero-gradient magnetic flux density in the z-direction.
+        """Generate a zero-gradient magnetic flux density in the z-direction.
 
         The requested field is split evenly between the two z-direction
-        Helmholtz coils."""
+        Helmholtz coils.
+        """
         self.dac.s826_aoPin(self.aoPinZ1, mT / 2 / self.aoFactorZ1)
         self.dac.s826_aoPin(self.aoPinZ2, mT / 2 / self.aoFactorZ2)
         self.bzSetpoint = mT
 
     def setXYZ(self,x_mT,y_mT,z_mT):
-        """ Generate a zero-gradient magnetic flux density in xyz. """
+        """Generate a zero-gradient magnetic flux density in xyz."""
         self.setX(x_mT)
         self.setY(y_mT)
         self.setZ(z_mT)
 
     def setXGradient(self,mT):
-        """ Generate a flux density gradient by applying current to only one x-coil.
+        """Generate a flux density x-direction gradient.
 
-            mT is a measurement of current in the coil. It has nothing to do
-            with actual flux density."""
+        mT is a measurement of current in the coil. It has nothing to do
+        with actual flux density.
+        """
         if mT > 0:
             self.dac.s826_aoPin(self.aoPinX1, mT / self.aoFactorX1)
         else:
@@ -91,10 +96,11 @@ class FieldManager(object):
         self.bxSetpoint = 0
 
     def setYGradient(self,mT):
-        """ Generate a flux density gradient by applying current to only one y-coil.
+        """Generate a flux density y-direction gradient.
 
-            mT is a measurement of current in the coil. It has nothing to do
-            with actual flux density."""
+        mT is a measurement of current in the coil. It has nothing to do
+        with actual flux density.
+        """
         if mT > 0:
             self.dac.s826_aoPin(self.aoPinY1, mT / self.aoFactorY1)
         else:
@@ -102,10 +108,11 @@ class FieldManager(object):
         self.bySetpoint = 0
 
     def setZGradient(self,mT):
-        """ Generate a flux density gradient by applying current to only one z-coil.
+        """Generate a flux density x-direction gradient.
 
-            mT is a measurement of current in the coil. It has nothing to do
-            with actual flux density."""
+        mT is a measurement of current in the coil. It has nothing to do
+        with actual flux density.
+        """
         if mT > 0:
             self.dac.s826_aoPin(self.aoPinZ1, mT / self.aoFactorZ1)
         else:
@@ -113,13 +120,13 @@ class FieldManager(object):
         self.bzSetpoint = 0
 
     def getXYZ(self):
-        """ Estimate the flux density in xyz using measured coil currents. """
+        """Estimate the flux density in xyz using measured coil currents."""
         self.dac.s826_aiRead()
         # Convert the analog input measured voltages into estimated field
         # values
-        self.bxEstimate = (self.dac.ai[self.aiPinX1] * self.aiFactorX1 +
-                           self.dac.ai[self.aiPinX2] * self.aiFactorX2) #[mT]
-        self.byEstimate = (self.dac.ai[self.aiPinY1] * self.aiFactorY1 +
-                           self.dac.ai[self.aiPinY2] * self.aiFactorY2) #[mT]
+        self.bxEstimate = (self.dac.ai[self.aiPinX1] * self.aiFactorX1
+                            + self.dac.ai[self.aiPinX2] * self.aiFactorX2)#[mT]
+        self.byEstimate = (self.dac.ai[self.aiPinY1] * self.aiFactorY1
+                            + self.dac.ai[self.aiPinY2] * self.aiFactorY2)#[mT]
         self.bzEstimate = (self.dac.ai[self.aiPinZ1] * self.aiFactorZ1 +
-                           self.dac.ai[self.aiPinZ2] * self.aiFactorZ2) #[mT]
+                            + self.dac.ai[self.aiPinZ2] * self.aiFactorZ2)#[mT]
