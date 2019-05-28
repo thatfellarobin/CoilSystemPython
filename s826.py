@@ -23,7 +23,9 @@ class S826(object):
         self.aiMaxV = [10,10,10,10,10,10,10,10]
         # Initial values for the measured analog input channels.
         self.ai = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        self.s826_init()
+        errCode = self.s826_init()
+        if errCode < 1:
+            return errCode
         self.s826_initRange()
         self.s826_initAnalogInputs()
 
