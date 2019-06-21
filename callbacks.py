@@ -7,6 +7,7 @@ from s826 import S826
 from subThread import SubThread
 from realTimePlot import CustomFigCanvas
 import syntax
+import numpy as np
 #=========================================================
 # UI Config
 #=========================================================
@@ -16,8 +17,18 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 # Creating instances of fieldManager and Camera
 #=========================================================
 field = FieldManager(S826())
-vision = Vision(index=1,type='firewire',guid=0x00097eff42909500,buffersize=12)
-# vision2 = Vision(index=2,type='firewire',guid=0x00097eff42802453,buffersize=12)
+vision = Vision(
+                index=1,
+                type='firewire',
+                guid=0x00097eff42909500,
+                buffersize=12
+                )
+# vision2 = Vision(
+#                 index=2,
+#                 type='firewire',
+#                 guid=0x00097eff42802453,
+#                 buffersize=12
+#                 )
 # to use usb camera, try vision = Vision(index=1,type='usb')
 # to use 1 camera only, comment out this line:    vision2 = ...
 #=========================================================
@@ -46,6 +57,7 @@ class GUI(QMainWindow,Ui_MainWindow):
         self.setupRealTimePlot()
         self.connectSignals()
         self.linkWidgets()
+        self.initDataBuffers()
 
     #=====================================================
     # [override] terminate the subThread and clear currents when closing the
@@ -216,9 +228,44 @@ class GUI(QMainWindow,Ui_MainWindow):
         self.btn_zoom.clicked.connect(self.realTimePlot.zoom)
 
     def updatePlot(self):
-        self.realTimePlot.addDataX(field.bxSetpoint)
-        self.realTimePlot.addDataY(field.bySetpoint)
-        self.realTimePlot.addDataZ(field.bzSetpoint)
+        # Update the measured coil currents and estimated field values
+        field.getXYZ()
+        # Update the values on the plot
+        self.realTimePlot.addDataX(field.bxEstimate)
+        self.realTimePlot.addDataY(field.byEstimate)
+        self.realTimePlot.addDataZ(field.bzEstimate)
+        # Filter the monitor values for easier viewing
+        self.ix1Buf[0] = field.ix1
+        self.ix1Buf = np.roll(self.ix1Buf, 1)
+        self.ix2Buf[0] = field.ix2
+        self.ix2Buf = np.roll(self.ix2Buf, 1)
+        self.iy1Buf[0] = field.iy1
+        self.iy1Buf = np.roll(self.iy1Buf, 1)
+        self.iy2Buf[0] = field.iy2
+        self.iy2Buf = np.roll(self.iy2Buf, 1)
+        self.iz1Buf[0] = field.iz1
+        self.iz1Buf = np.roll(self.iz1Buf, 1)
+        self.iz2Buf[0] = field.iz2
+        self.iz2Buf = np.roll(self.iz2Buf, 1)
+        self.bxEstBuf[0] = field.bxEstimate
+        self.bxEstBuf = np.roll(self.bxEstBuf, 1)
+        self.byEstBuf[0] = field.byEstimate
+        self.byEstBuf = np.roll(self.byEstBuf, 1)
+        self.bzEstBuf[0] = field.bzEstimate
+        self.bzEstBuf = np.roll(self.bzEstBuf, 1)
+        # Update the monitor values for the currents and fields
+        self.label_x1.setText('{0:0.1f}'.format(np.mean(self.ix1Buf)))
+        self.label_x2.setText('{0:0.1f}'.format(np.mean(self.ix2Buf)))
+        self.label_xBreq.setText('{0:0.1f}'.format(field.bxSetpoint))
+        self.label_xBact.setText('{0:0.1f}'.format(np.mean(self.bxEstBuf)))
+        self.label_y1.setText('{0:0.1f}'.format(np.mean(self.iy1Buf)))
+        self.label_y2.setText('{0:0.1f}'.format(np.mean(self.iy2Buf)))
+        self.label_yBreq.setText('{0:0.1f}'.format(field.bySetpoint))
+        self.label_yBact.setText('{0:0.1f}'.format(np.mean(self.byEstBuf)))
+        self.label_z1.setText('{0:0.1f}'.format(np.mean(self.iz1Buf)))
+        self.label_z2.setText('{0:0.1f}'.format(np.mean(self.iz2Buf)))
+        self.label_zBreq.setText('{0:0.1f}'.format(field.bzSetpoint))
+        self.label_zBact.setText('{0:0.1f}'.format(np.mean(self.bzEstBuf)))
 
     #=====================================================
     # Callback Functions
@@ -295,3 +342,15 @@ class GUI(QMainWindow,Ui_MainWindow):
         else:
             self.cbb_subThread.setEnabled(True)
             self.thrd.stop()
+
+    def initDataBuffers(self):
+        bufLength = 15
+        self.ix1Buf = np.zeros(bufLength)
+        self.ix2Buf = np.zeros(bufLength)
+        self.iy1Buf = np.zeros(bufLength)
+        self.iy2Buf = np.zeros(bufLength)
+        self.iz1Buf = np.zeros(bufLength)
+        self.iz2Buf = np.zeros(bufLength)
+        self.bxEstBuf = np.zeros(bufLength)
+        self.byEstBuf = np.zeros(bufLength)
+        self.bzEstBuf = np.zeros(bufLength)
