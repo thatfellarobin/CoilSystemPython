@@ -43,7 +43,9 @@ Contents
 
 ### Installation
 
-New(Apr 6, 2018): Updated "autoInstall.sh" that helps install all packages automatically. Many thanks to Omidy. The file can be found in "utilities". 
+New(Apr 6, 2018): Updated `autoInstall.sh` that helps install all packages automatically. Many thanks to Omidy. The file can be found in "utilities".
+
+Note that `autoInstall.sh` will not work by default with python virtual environments.
 
 ```
 1. Download "autoInstall.sh" to your local folder.
@@ -63,6 +65,7 @@ This bash file installs all the following dependencies:
 pip3 install opencv-python
 
 pip3 install opencv-contrib-python
+
 ```
 
 2. pyqt5
@@ -282,8 +285,15 @@ Please refer to the *drawing()* in subThread.py.
 
 ## Known Issues
 
+### Installation Issues:
+
+- `Cannot detect S826 board (Error code 0)`: Attempt to reinstall S826 driver. This error can occur on its own from time to time.
+- Error during S826 driver installation after `make modules`: `make[2]: *** /lib/modules/4.15.0-129-generic/build: No such file or directory. Stop.`: try `sudo apt-get install linux-headers-\`uname -r\``
+- Sometimes the S826 driver installation shows errors, but the coil system is able to load anyway.
+- Error `qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "[...]/cv2/qt/plugins" even though it was found.`: later versions of opencv apparently look in a different spot for the plugin, where it is not located. This error can be fixed by installing opencv version as per `Utilities/requirements.txt`
+
+### Operational Issues:
+
 1. The program always crashes on the first time after system startup.
-
 2. If a game controller is used, segmentation fault occurs when exiting the program. 
-
 3. Segmentation fault occurs when the user tries to record the videos of multiple cameras simultaneously. (When *self.vision.stopRecording()* is executed)
