@@ -283,6 +283,38 @@ class SubThread(QThread):
                 self.vision.stopRecording()
                 return
 
+    def robinGripper(self):
+        #=============================
+        # 0 'Frequency (Hz)'
+        # 1 'Magniude (mT)'
+        # 2 'Min angle (deg)'
+        # 3 'Max angle (deg)'
+        #=============================
+
+        # Will rotate in the YZ Plane
+
+        startTime = time.time()
+        
+        while True:
+            period = 1/self.params[0]
+            magnitude = self.params[1]
+            min_angle = self.params[2]
+            max_angle = self.params[3]
+            avg_angle = (max_angle + min_angle)/2
+            angle_amplitude = (max_angle - min_angle)/2
+
+            t = time.time() - startTime # elapsed time (sec)
+            theta = (avg_angle + angle_amplitude * np.sin((t / period) * 2 * pi)) * (pi / 180)
+            fieldY = magnitude * cos(theta)
+            fieldZ = magnitude * sin(theta)
+
+            self.field.setY(fieldY)
+            self.field.setZ(fieldZ)
+            self.field.setX(0)
+
+            if self.stopped:
+                return
+
     def tianqiGripper(self):
         #=============================
         # reference params
