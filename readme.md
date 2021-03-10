@@ -288,7 +288,7 @@ Please refer to the *drawing()* in subThread.py.
 ### Installation Issues:
 
 - `Cannot detect S826 board (Error code 0)`: Attempt to reinstall S826 driver. This error can occur on its own from time to time.
-- Error during S826 driver installation after `make modules`: `make[2]: *** /lib/modules/4.15.0-129-generic/build: No such file or directory. Stop.`: try `sudo apt-get install linux-headers-\`uname -r\``
+- Error during S826 driver installation after `make modules`: `make[2]: *** /lib/modules/4.15.0-129-generic/build: No such file or directory. Stop.`: try sudo apt-get install -y linux-headers-`uname -r` (https://unix.stackexchange.com/questions/360020/build-is-missing-for-compiling-kernel-module)
 - Sometimes the S826 driver installation shows errors, but the coil system is able to load anyway.
 - Error `qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "[...]/cv2/qt/plugins" even though it was found.`: later versions of opencv apparently look in a different spot for the plugin, where it is not located. This error can be fixed by installing opencv version as per `Utilities/requirements.txt`
 
